@@ -1,9 +1,7 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace CsvToJson.Tests
@@ -15,8 +13,8 @@ namespace CsvToJson.Tests
         {
             Dictionary<string, object> result;
 
-            using(var stream = new MemoryStream(Encoding.UTF8.GetBytes("Id,Nombre,Activo\n0,Demo,true")))
-            using(var streamReader = new StreamReader(stream))
+            var input = Encoding.UTF8.GetBytes("Id,Nombre,Activo\n0,Demo,true");
+            using (var streamReader = new StreamReader(new MemoryStream(input)))
             {
                 var reader = new CsvReader(streamReader);
                 result = reader.ReadAsync().Result;
@@ -33,8 +31,8 @@ namespace CsvToJson.Tests
         {
             Dictionary<string, object> result;
 
-            using(var stream = new MemoryStream(Encoding.UTF8.GetBytes("Id|Nombre|Activo\n0|Demo|true")))
-            using(var streamReader = new StreamReader(stream))
+            var input = Encoding.UTF8.GetBytes("Id|Nombre|Activo\n0|Demo|true");
+            using (var streamReader = new StreamReader(new MemoryStream(input)))
             {
                 var reader = new CsvReader(streamReader, "|");
                 result = reader.ReadAsync().Result;

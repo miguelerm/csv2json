@@ -18,17 +18,15 @@ namespace CsvToJson.Tests
             };
 
             string result;
+            var output = new byte[24];
 
-            using (var stream = new MemoryStream())
+            using (var writer = new StreamWriter(new MemoryStream(output)))
+            using (var formatter = new JsonWriter(writer))
             {
-                using (var writer = new StreamWriter(stream))
-                using (var formatter = new JsonWriter(writer))
-                {
-                    formatter.WriteAsync(testObj).Wait();
-                }
-
-                result = Encoding.UTF8.GetString(stream.ToArray());
+                formatter.WriteAsync(testObj).Wait();
             }
+
+            result = Encoding.UTF8.GetString(output);
 
 
             Assert.Equal("[{\"id\":0,\"name\":\"Test\"}]", result);
@@ -43,17 +41,15 @@ namespace CsvToJson.Tests
 
             string result;
 
-            using (var stream = new MemoryStream())
+            var output = new byte[47];
+            using (var writer = new StreamWriter(new MemoryStream(output)))
+            using (var formatter = new JsonWriter(writer))
             {
-                using (var writer = new StreamWriter(stream))
-                using (var formatter = new JsonWriter(writer))
-                {
-                    formatter.WriteAsync(testObj).Wait();
-                    formatter.WriteAsync(testObj).Wait();
-                }
-
-                result = Encoding.UTF8.GetString(stream.ToArray());
+                formatter.WriteAsync(testObj).Wait();
+                formatter.WriteAsync(testObj).Wait();
             }
+
+            result = Encoding.UTF8.GetString(output);
 
             Assert.Equal("[{\"id\":0,\"name\":\"Test\"},{\"id\":0,\"name\":\"Test\"}]", result);
         }
